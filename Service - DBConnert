@@ -1,0 +1,17 @@
+package Repository;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class DBConnect {
+    public static Connection getConnection() {
+        try {
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=PTPM_SOF2043_FINAL;encrypt=true;trustServerCertificate=true";
+            String user = "sa";
+            String pass = "123456";
+            return DriverManager.getConnection(url, user, pass);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
