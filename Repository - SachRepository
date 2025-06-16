@@ -1,0 +1,56 @@
+package Repository;
+
+import Model.SachModel;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SachRepository {
+
+    public List<SachModel> getAll() {
+        List<SachModel> list = new ArrayList<>();
+        String sql = "SELECT * FROM Sach";
+        try (Connection con = DBConnect.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                SachModel s = new SachModel(
+                        rs.getString("MaSach"),
+                        rs.getString("TenSach"),
+                        Double.parseDouble(rs.getString("DonGia")),
+                        rs.getString("MaTheLoai")
+                );
+                list.add(s);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void insert(SachModel s) {
+        String sql = "INSERT INTO Sach (MaSach, TenSach, DonGia, MaTheLoai) VALUES (?, ?, ?, ?)";
+        try (Connection con = DBConnect.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, s.getMaSach());
+            ps.setString(2, s.getTenSach());
+            ps.setDouble(3, s.getDonGia());
+            ps.setString(4, s.getMaTheLoai());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(String maSach) {
+        String sql = "DELETE FROM Sach WHERE MaSach = ?";
+        try (Connection con = DBConnect.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, maSach);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
