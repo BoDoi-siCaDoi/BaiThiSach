@@ -1,0 +1,21 @@
+package Service;
+
+import Model.SachModel;
+import Repository.SachRepository;
+import java.util.List;
+
+public class SachService {
+    private SachRepository repo = new SachRepository();
+
+    public List<SachModel> getAll() {
+        return repo.getAll();
+    }
+
+    public void insert(SachModel s) {
+        repo.insert(s);
+    }
+
+    public void delete(String maSach) {
+        repo.delete(maSach);
+    }
+}
