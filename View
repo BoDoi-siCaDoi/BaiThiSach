@@ -1,0 +1,87 @@
+package View;
+
+import Model.SachModel;
+import Model.TheLoaiModel;
+import Service.SachService;
+import Service.TheLoaiService;
+
+import java.util.ArrayList;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+
+public class QuanLySach extends javax.swing.JFrame {
+    SachService sachService = new SachService();
+    TheLoaiService theLoaiService = new TheLoaiService();
+
+    public QuanLySach() {
+        initComponents();
+        loadCbo();
+        loadTable();
+
+        if (tblBang.getRowCount() > 0) {
+            tblBang.setRowSelectionInterval(0, 0);
+            showDetail();
+        }
+    }
+
+    void loadCbo() {
+        cbbChon.removeAllItems();
+        for (TheLoaiModel tl : theLoaiService.getAll()) {
+            cbbChon.addItem(tl.getMaTheLoai());
+        }
+    }
+
+    void loadTable() {
+        DefaultTableModel model = (DefaultTableModel) tblBang.getModel();
+        model.setRowCount(0);
+        for (SachModel s : sachService.getAll()) {
+            model.addRow(new Object[]{
+                s.getMaSach(), s.getTenSach(), s.getDonGia(), s.getMaTheLoai()
+            });
+        }
+    }
+
+    void showDetail() {
+        int row = tblBang.getSelectedRow();
+        if (row >= 0) {
+            txtMaSach.setText(tblBang.getValueAt(row, 0).toString());
+            txtTenSach.setText(tblBang.getValueAt(row, 1).toString());
+            txtDonGia.setText(tblBang.getValueAt(row, 2).toString());
+            cbbChon.setSelectedItem(tblBang.getValueAt(row, 3).toString());
+        }
+    }
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            String ma = txtMaSach.getText();
+            String ten = txtTenSach.getText();
+            double gia = Double.parseDouble(txtDonGia.getText());
+            String maTheLoai = cbbChon.getSelectedItem().toString();
+
+            SachModel s = new SachModel(ma, ten, gia, maTheLoai);
+            sachService.insert(s);
+            JOptionPane.showMessageDialog(this, "Thêm thành công");
+            loadTable();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi thêm: " + e.getMessage());
+        }
+    }
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            String ma = txtMaSach.getText();
+            sachService.delete(ma);
+            JOptionPane.showMessageDialog(this, "Xóa thành công");
+            loadTable();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi xóa: " + e.getMessage());
+        }
+    }
+
+    private void tblBangMouseClicked(java.awt.event.MouseEvent evt) {
+        showDetail();
+    }
+
+    // Khai báo: btnThem, btnXoa, txtMaSach, txtTenSach, txtDonGia, cbbChon, tblBang trong initComponents()
+}
