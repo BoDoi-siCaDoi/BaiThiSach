@@ -1,0 +1,30 @@
+package Repository;
+
+import Model.TheLoaiModel;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TheLoaiRepository {
+
+    public List<TheLoaiModel> getAll() {
+        List<TheLoaiModel> list = new ArrayList<>();
+        String sql = "SELECT * FROM TheLoai";
+        try (Connection con = DBConnect.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                TheLoaiModel tl = new TheLoaiModel(
+                        rs.getString("MaTheLoai"),
+                        rs.getString("TenTheLoai")
+                );
+                list.add(tl);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+}
