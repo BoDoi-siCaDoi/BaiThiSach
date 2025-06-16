@@ -1,0 +1,13 @@
+package Service;
+
+import Model.TheLoaiModel;
+import Repository.TheLoaiRepository;
+import java.util.List;
+
+public class TheLoaiService {
+    private TheLoaiRepository repo = new TheLoaiRepository();
+
+    public List<TheLoaiModel> getAll() {
+        return repo.getAll();
+    }
+}
